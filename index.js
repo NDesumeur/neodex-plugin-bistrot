@@ -625,16 +625,41 @@ function bsItem(g, it, cx, by) {  // un objet posé : (cx, by) = milieu du bas
 const bsBar = (g, x, y, f, col) => { px(g, '#1a1008', x - 1, y - 1, 12, 4); px(g, '#3a2a1a', x, y, 10, 2); px(g, col, x, y, Math.max(1, Math.round(10 * Math.min(1, f))), 2); };
 function bsTile(g, cx, cy) {
   const ch = bs.grid[cy][cx], x = cx * 12, y = BS.TOP + cy * 12, k = bsKey(cx, cy), it = bs.items.get(k), blink = bs.tick % 20 < 10;
-  if (ch === '.') { px(g, (cx + cy) % 2 ? '#e4d4b4' : '#d8c6a2', x, y, 12, 12); px(g, '#c4b08a', x, y + 11, 12, 1); px(g, '#c4b08a', x + 11, y, 1, 12); if (!bsFloor(cx, cy - 1)) px(g, '#bca07a', x, y, 12, 2); return; }
+  if (ch === '.') {  // le carrelage : damier crème et terre cuite, joints, reflet en haut à gauche, ombre des comptoirs voisins
+    const a = (cx + cy) % 2, h = (cx * 7 + cy * 13) % 5;
+    px(g, a ? '#ecdcbc' : '#d8a878', x, y, 12, 12); px(g, a ? '#f8ecd4' : '#e8bc8c', x + 1, y + 1, 9, 1); px(g, a ? '#f8ecd4' : '#e8bc8c', x + 1, y + 1, 1, 9);
+    px(g, a ? '#dccaa4' : '#c8966a', x + 2, y + 10, 9, 1); px(g, a ? '#dccaa4' : '#c8966a', x + 10, y + 2, 1, 9);
+    if (h === 1) px(g, a ? '#e0cea8' : '#c48e60', x + 4 + (cx % 3) * 2, y + 5 + (cy % 2) * 2, 2, 1);
+    px(g, '#a88a66', x, y + 11, 12, 1); px(g, '#a88a66', x + 11, y, 1, 12);
+    if (!bsFloor(cx, cy - 1)) { g.fillStyle = 'rgba(70,36,12,.32)'; g.fillRect(x, y, 12, 3); g.fillStyle = 'rgba(70,36,12,.16)'; g.fillRect(x, y + 3, 12, 1); }
+    if (!bsFloor(cx - 1, cy)) { g.fillStyle = 'rgba(70,36,12,.2)'; g.fillRect(x, y, 2, 12); }
+    return;
+  }
   const metal = 'SMX'.includes(ch);
-  px(g, metal ? '#7a7e8c' : '#c89a62', x, y, 12, 9); px(g, metal ? '#a8acb8' : '#e0b47a', x, y, 12, 1); px(g, metal ? '#5a5e6a' : '#a87a48', x, y, 1, 9);
-  px(g, metal ? '#4a4e5a' : '#8a5a2e', x, y + 9, 12, 2); px(g, '#2a1408', x, y + 11, 12, 1);
-  if (BS_CRATE[ch]) { px(g, '#5a3414', x + 1, y + 1, 10, 8); px(g, '#9a6430', x + 2, y + 2, 8, 6); px(g, '#7a4a20', x + 2, y + 4, 8, 1); if (!it) sprite(g, BS_SPR[BS_CRATE[ch]], x + 2, y - 1, BS_PAL); }
-  else if (ch === 'C') { px(g, '#8a6030', x + 1, y + 2, 10, 6); px(g, '#e8c890', x + 1, y + 1, 10, 6); px(g, '#f8e0b0', x + 1, y + 1, 10, 1); if (!it) { px(g, '#d8dce8', x + 3, y + 3, 5, 1); px(g, '#3a2a1a', x + 8, y + 3, 2, 1); } }
+  if (metal) {  // l'inox brossé : reflets en bandes, rivets aux coins, façade sombre
+    px(g, '#868a98', x, y, 12, 8); for (let i = 1; i < 8; i += 2) px(g, '#7c808e', x, y + i, 12, 1); px(g, '#c4c8d4', x, y, 12, 1); px(g, '#a4a8b4', x, y + 1, 1, 7); px(g, '#5a5e6a', x + 11, y + 1, 1, 7);
+    px(g, '#2a2e38', x + 1, y + 1, 1, 1); px(g, '#2a2e38', x + 10, y + 6, 1, 1);
+    px(g, '#4a4e5a', x, y + 8, 12, 3); px(g, '#5e626e', x, y + 8, 12, 1); px(g, '#2a2e38', x + 3, y + 9, 6, 1);
+  } else {  // le bois : dessus clair veiné, chant arrondi, façade de placard avec sa poignée
+    px(g, '#c8925a', x, y, 12, 8); px(g, '#e4b47a', x, y, 12, 1); px(g, '#d8a46a', x, y + 1, 12, 1);
+    for (let i = 0; i < 3; i++) { const gy = y + 2 + ((cx * 3 + cy + i * 2) % 5), gx = x + ((cx * 5 + i * 4) % 8); px(g, '#b47e48', gx, gy, 3 + (i % 2), 1); }
+    px(g, '#a8763e', x + 11, y + 1, 1, 7);
+    px(g, '#7a4a22', x, y + 8, 12, 3); px(g, '#8e5a2e', x, y + 8, 12, 1); px(g, '#5a3414', x + 11, y + 8, 1, 3);
+    if ((cx + cy) % 2) px(g, '#e8c080', x + 5, y + 9, 2, 1);
+  }
+  px(g, '#2a1408', x, y + 11, 12, 1);
+  if (BS_CRATE[ch]) {  // une caisse en lattes, pleine de son ingrédient
+    px(g, '#3a2010', x + 1, y + 1, 10, 8); px(g, '#a86e34', x + 2, y + 2, 8, 6); px(g, '#c88a48', x + 2, y + 2, 8, 1); px(g, '#7a4a20', x + 2, y + 4, 8, 1); px(g, '#7a4a20', x + 2, y + 6, 8, 1); px(g, '#5a3414', x + 5, y + 2, 1, 6);
+    if (!it) { sprite(g, BS_SPR[BS_CRATE[ch]], x + 2, y - 2, BS_PAL); }
+  }
+  else if (ch === 'C') {  // la planche à découper : bois clair veiné, couteau
+    px(g, '#5a3414', x + 1, y + 1, 10, 7); px(g, '#e8c890', x + 1, y + 1, 10, 6); px(g, '#f8e0b0', x + 1, y + 1, 10, 1); px(g, '#d0aa70', x + 2, y + 4, 4, 1); px(g, '#d0aa70', x + 6, y + 6, 3, 1);
+    if (!it) { px(g, '#e8ecf4', x + 3, y + 3, 5, 1); px(g, '#a8acb8', x + 3, y + 4, 5, 1); px(g, '#3a2a1a', x + 8, y + 3, 3, 2); } }
   else if (ch === 'S') {
     const hot = it && it.t === 'viande';
-    if (hot && bs.tick % 6 < 3) px(g, '#ff8a2a', x + 1, y + 2, 9, 6);
-    px(g, '#2a2e3a', x + 1, y + 1, 10, 7); sprite(g, BS_PAN, x, y + 1, BS_PAL);
+    px(g, '#1a1c24', x + 1, y + 1, 10, 7); px(g, hot ? (bs.tick % 8 < 4 ? '#ff6a1a' : '#e84a10') : '#3a3e4a', x + 2, y + 2, 8, 5); px(g, '#1a1c24', x + 3, y + 3, 6, 3);
+    if (hot) { px(g, '#ffd84a', x + 2 + (bs.tick >> 2) % 8, y + 2, 1, 1); if (bs.tick % 24 < 12) px(g, 'rgba(255,255,255,.5)', x + 4 + (bs.tick >> 3) % 3, y - 3 - (bs.tick % 12 >> 2), 1, 2); }
+    sprite(g, BS_PAN, x, y + 1, BS_PAL);
     if (it) { bsItem(g, it, x + 6, y + 8); if (it.t === 'viande' && it.s === 'hache') bsBar(g, x + 1, y - 2, it.k / BS.COOK, '#ff9a3a'); if (it.s === 'cuit' && it.k > BS.COOK + BS.BURN * .4 && blink) pxFont(g, '!', x + 6, y - 1, '#ff4a3a', 8, 'center'); }
     return;
   }
@@ -649,9 +674,10 @@ function bsTile(g, cx, cy) {
     return;
   }
   else if (ch === 'A') { for (let i = 0; i < Math.min(4, bs.plates); i++) sprite(g, BS_PLATE, x + 1, y + 4 - i * 2, BS_PAL); }
-  else if (ch === 'X') { px(g, '#5a5e6a', x + 1, y + 2, 10, 6); for (let i = 0; i < 3; i++) { const c = (bs.tick / 8 + i) % 3 < 1 ? '#ffd84a' : '#c8a030'; px(g, c, x + 3 + i * 2, y + 3, 1, 1); px(g, c, x + 4 + i * 2, y + 4, 1, 1); px(g, c, x + 3 + i * 2, y + 5, 1, 1); }
+  else if (ch === 'X') { g.fillStyle = 'rgba(255,200,80,.18)'; g.fillRect(x - 1, y - 1, 14, 11); px(g, '#5a5e6a', x + 1, y + 2, 10, 6); for (let i = 0; i < 3; i++) { const c = (bs.tick / 8 + i) % 3 < 1 ? '#ffd84a' : '#c8a030'; px(g, c, x + 3 + i * 2, y + 3, 1, 1); px(g, c, x + 4 + i * 2, y + 4, 1, 1); px(g, c, x + 3 + i * 2, y + 5, 1, 1); }
     if (bsCh(cx, cy - 1) !== 'X') { px(g, '#1a1008', x + 8, y - 1, 3, 2); px(g, '#ffd84a', x + 9, y - 1, 1, 1); } }
-  else if (ch === 'D') { px(g, '#1a1a22', x + 2, y, 8, 9); px(g, '#5a5e6a', x + 3, y + 1, 6, 7); px(g, '#7a7e8c', x + 2, y, 8, 2); px(g, '#3a3e4a', x + 5, y + 3, 1, 4); px(g, '#3a3e4a', x + 7, y + 3, 1, 4); }
+  else if (ch === 'D') { px(g, '#1a1a22', x + 2, y - 1, 8, 10); px(g, '#6a6e7c', x + 3, y + 1, 6, 7); px(g, '#8a8e9c', x + 3, y + 1, 1, 7); px(g, '#9a9eac', x + 2, y - 1, 8, 2); px(g, '#c8ccd8', x + 3, y - 1, 6, 1); px(g, '#1a1a22', x + 5, y - 2, 2, 1);
+    px(g, '#4a4e5a', x + 5, y + 3, 1, 4); px(g, '#4a4e5a', x + 7, y + 3, 1, 4); px(g, '#2a2e38', x + 4, y + 8, 4, 1); }
   if (it) { bsItem(g, it, x + 6, y + 8); if (ch === 'C' && it.s === 'cru' && it.c > 0) bsBar(g, x + 1, y - 2, it.c / BS.CHOP, '#7ae05a'); }
 }
 const BS_CHEF = {
@@ -666,7 +692,7 @@ function bsChef(g) {
   const moving = bs.mode === 'play' && (bs.goal?.path.length || [...bs.keys].some(k => 'UDLR'.includes(k)));
   let rows = [...(dy < 0 ? BS_CHEF.up : dx ? BS_CHEF.side : BS_CHEF.down), ...(moving ? legs : BS_LEGS[0])];
   if (dx < 0) rows = rows.map(r => [...r].reverse().join(''));
-  px(g, 'rgba(26,16,8,.25)', x + 2, y + 13, 8, 2);
+  g.fillStyle = 'rgba(40,20,8,.3)'; g.fillRect(x + 2, y + 13, 8, 2); g.fillRect(x + 3, y + 12, 6, 4);
   if (bs.hand && dy < 0) bsItem(g, bs.hand, x + 6, y + 9);
   sprite(g, rows, x, y, BS_CPAL);
   if (bs.chop) { const up = bs.tick % 10 < 5; px(g, '#d8dce8', x + 6 + dx * 6 + (dx ? 0 : 3), y + (up ? 5 : 8) + dy * 4, 1, 3); }
@@ -684,10 +710,10 @@ function bsDraw() {
   if (front >= 0) { const fx = front % BS.COLS * 12, fy = TOP + Math.floor(front / BS.COLS) * 12, c = '#ffffff'; for (const [a, b] of [[0, 0], [10, 0], [0, 9], [10, 9]]) { px(g, c, fx + a, fy + b, 2, 1); px(g, c, fx + a + (a ? 1 : 0), fy + b + (b ? -1 : 0), 1, 2); } }
   for (const f of bs.fx) { if (f.txt) pxFont(g, f.txt, f.x, TOP + f.y - (60 - f.t) * .3, f.c, 8, 'center'); else px(g, f.c, f.x, TOP + f.y - (30 - f.t) * .4, 2, 2); }
   // les tickets de commande, le temps et le score
-  px(g, '#2a1810', 0, 0, W, TOP); px(g, '#1a1008', 0, TOP - 1, W, 1);
+  px(g, '#2a1810', 0, 0, W, TOP); for (let x = 0; x < W; x += 8) px(g, '#33200f', x, 0, 4, TOP - 1); px(g, '#1a1008', 0, TOP - 1, W, 1); px(g, '#8a8e9c', 0, 0, W, 1); px(g, '#4a4e5a', 0, 1, W, 1);
   bs.orders.forEach((o, i) => {
     const x = 2 + i * 44, y = 1 - (o.born || 0), R = BS_REC[o.r], f = o.left / o.tot, late = f < .25 && bs.tick % 20 < 10;
-    px(g, late ? '#ffd0c0' : '#f4ecd8', x, y, 42, 16); px(g, '#c8b898', x, y + 15, 42, 1);
+    px(g, 'rgba(0,0,0,.35)', x + 1, y + 1, 42, 16); px(g, late ? '#ffd0c0' : '#f4ecd8', x, y, 42, 16); px(g, '#fffaf0', x, y, 42, 1); px(g, '#c8b898', x, y + 15, 42, 1); px(g, '#5a5e6a', x + 19, y - 1, 4, 2); px(g, '#a8acb8', x + 19, y - 1, 4, 1);
     sprite(g, BS_DISH[o.r], x + 2, y + 2, BS_PAL);
     const parts = R.parts[0].startsWith('soupe') ? Array(3).fill(R.parts[0] === 'soupeT' ? 'tomate' : 'oignon') : R.parts;
     parts.forEach((p, j) => bsIcon(g, p, x + 13 + j * 9, y + 2));
