@@ -14,21 +14,28 @@ Un jeu de cuisine en pixel art, vu de dessus : prépare les commandes et envoie-
 
 ## Comment ça marche
 
-- Les **commandes** arrivent en haut, avec une barre de temps.
+- Les **clients** s'installent dans la salle, à droite ; leurs **tickets** arrivent en haut, avec une barre de patience.
 - Prends les ingrédients dans les **caisses** et **hache**-les sur la planche.
-- Le steak haché va à la **poêle** ; trois tomates ou trois oignons hachés vont dans la **marmite** pour une soupe.
-- **Dresse l'assiette** sur un plan de travail, puis pose-la sur le **passe**.
-- Ce qui reste sur le feu **finit par brûler** : vide-le à la poubelle.
-- Les assiettes servies reviennent au bout de quelques secondes.
-- **Trois minutes** de service. Un ticket raté coûte 10 points ; un plat servi vite rapporte un pourboire.
+- Le steak haché va à la **poêle**, les pommes de terre hachées à la **friteuse** ; trois tomates ou trois oignons hachés vont dans la **marmite** pour une soupe.
+- La **pizza** : pose la pâte sur un plan de travail, garnis-la de tomate et de fromage hachés, puis enfourne-la au **four**.
+- **Dresse l'assiette** sur un plan de travail, puis pose-la sur le **passe** : le client mange, content.
+- Au-dessus de chaque poste, une **jauge** montre la cuisson ; quand « !! » clignote, ça va **brûler** : vide le brûlé à la poubelle.
+- La bulle au-dessus du cuisinier montre ce que deviendra l'assiette en main, cochée si un client l'a commandée.
+- **Trois minutes** de service. Un ticket raté coûte 10 points et le client repart fâché.
+
+## Pourboires, combos et clients pressés
+
+- Servir **vite** rapporte un **pourboire** (+8 ou +15).
+- Servir plusieurs plats **à la suite** (moins de 25 secondes entre deux) fait un **combo** : +5 par plat d'affilée, jusqu'à +20. Un ticket raté le casse.
+- Les clients **pressés** (ticket marqué PRESSÉ) attendent moins longtemps mais paient moitié plus.
 
 ## Les cuisines
 
-Six cuisines : **Le comptoir**, **Burgers**, **Soupes**, **Fromagerie**, **Grand service** et **Coup de feu**. Chacune donne jusqu'à **trois étoiles** ; une étoile ouvre la suivante.
+Neuf cuisines, plus compactes qu'avant : **Le comptoir**, **Burgers**, **Soupes**, **Friterie**, **Fromagerie** (portes battantes), **Pizzeria**, **Salon de thé**, **Grand service** et **Coup de feu** (portes battantes et deux coups de feu où les commandes arrivent deux fois plus vite). Les portes battantes s'ouvrent et se ferment toutes les six secondes ; un passage reste toujours libre à côté. Chaque cuisine donne jusqu'à **trois étoiles** ; une étoile ouvre la suivante.
 
 ## Statistiques
 
-Le panneau Records garde le **meilleur score** et les **étoiles** de chaque cuisine, le nombre de **plats servis** et le total des étoiles.
+Le panneau Records garde le **meilleur score** et les **étoiles** de chaque cuisine, le nombre de **plats servis**, le total des **pourboires** et des étoiles.
 
 ## Données et synchronisation
 

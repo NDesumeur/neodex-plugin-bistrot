@@ -14,21 +14,28 @@ A top-down pixel art cooking game: prepare the orders and send them to the pass 
 
 ## How it works
 
-- **Orders** come in at the top, each with a time bar.
+- **Guests** sit down in the dining room, on the right; their **tickets** come in at the top, each with a patience bar.
 - Take ingredients from the **crates** and **chop** them on the board.
-- The chopped patty goes in the **pan**; three chopped tomatoes or onions go in the **pot** for a soup.
-- **Plate up** on a worktop, then put the plate on the **pass**.
-- Whatever stays on the heat **ends up burning**: empty it in the bin.
-- Served plates come back after a few seconds.
-- **Three minutes** of service. A missed ticket costs 10 points; a dish served fast earns a tip.
+- The chopped patty goes in the **pan**, chopped potatoes in the **fryer**; three chopped tomatoes or onions go in the **pot** for a soup.
+- **Pizza**: put the dough on a worktop, top it with chopped tomato and cheese, then bake it in the **oven**.
+- **Plate up** on a worktop, then put the plate on the **pass**: the guest eats, happy.
+- Above each station, a **gauge** shows the cooking; when "!!" blinks, it is about to **burn**: empty burnt food in the bin.
+- The bubble above the cook shows what the plate in hand will become, ticked if a guest ordered it.
+- **Three minutes** of service. A missed ticket costs 10 points and the guest leaves angry.
+
+## Tips, combos and hurried guests
+
+- Serving **fast** earns a **tip** (+8 or +15).
+- Serving several dishes **in a row** (less than 25 seconds apart) makes a **combo**: +5 per dish in a row, up to +20. A missed ticket breaks it.
+- **Hurried** guests (ticket marked HURRY) wait less but pay half as much again.
 
 ## Kitchens
 
-Six kitchens: **The Counter**, **Burgers**, **Soups**, **Cheese Shop**, **Big Service** and **Rush Hour**. Each gives up to **three stars**; one star unlocks the next.
+Nine kitchens, more compact than before: **The Counter**, **Burgers**, **Soups**, **Chip Shop**, **Cheese Shop** (swinging doors), **Pizzeria**, **Tea Room**, **Big Service** and **Rush Hour** (swinging doors and two rushes when orders come twice as fast). Swinging doors open and close every six seconds; a way through always stays free next to them. Each kitchen gives up to **three stars**; one star unlocks the next.
 
 ## Stats
 
-The Bests panel keeps the **best score** and **stars** for each kitchen, the number of **dishes served** and the total stars.
+The Bests panel keeps the **best score** and **stars** for each kitchen, the number of **dishes served**, total **tips** and total stars.
 
 ## Data and sync
 
