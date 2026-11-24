@@ -37,7 +37,6 @@
  "Ia": "Ia",
  "Ic": "Ic",
  "Id": "Id",
- "Jeu de cuisine en pixel art vu de dessus, avec la salle et ses clients à côté : neuf cuisines, des commandes à préparer contre la montre (salades, burgers, soupes, frites, pizzas, coupes de fraises). On hache, on cuit à la poêle, à la friteuse, au four ou à la marmite, on dresse l'assiette et on l'envoie au passe ; des jauges montrent la cuisson et préviennent avant que ça brûle. Portes battantes, coups de feu, clients pressés, pourboires et combos. Trois étoiles par cuisine.": "Top-down pixel-art cooking game, with the dining room and its guests alongside: nine kitchens, orders to prepare against the clock (salads, burgers, soups, fries, pizzas, strawberry cups). Chop, cook in the pan, fryer, oven or pot, plate up and send it to the pass; gauges show the cooking and warn you before it burns. Swinging doors, rush hours, hurried guests, tips and combos. Three stars per kitchen.",
  "KAAKHDDDDDDDKSSK": "KAAKHDDDDDDDKSSK",
  "KAAKHHHHHHHHKSSK": "KAAKHHHHHHHHKSSK",
  "KAAKKKKKKKKKKSSK": "KAAKKKKKKKKKKSSK",
@@ -66,7 +65,6 @@
  "Le comptoir": "The Counter",
  "Le four, c’est pour la pizza": "The oven is for pizza",
  "Le passe veut une assiette dressée": "The pass needs a plated dish",
- "Les clients attendent dans la salle, à droite ; leurs tickets sont en haut. Prends les ingrédients dans les caisses, hache-les sur la planche (maintiens E), cuis le steak à la poêle, les frites à la friteuse, la pizza garnie au four et la soupe à la marmite, dresse l'assiette et pose-la sur le passe. Les jauges disent où en est la cuisson ; « !! » : ça va brûler. Servir vite rapporte un pourboire, servir à la suite un combo ; les clients pressés paient plus. Une étoile ouvre la cuisine suivante. À la souris : clique sur une case pour y aller.": "Guests wait in the dining room, on the right; their tickets are at the top. Take ingredients from the crates, chop them on the board (hold E), cook the patty in the pan, fries in the fryer, the topped pizza in the oven and soup in the pot, plate up and put the plate on the pass. Gauges show how the cooking is going; \"!!\": it is about to burn. Serving fast earns a tip, serving in a row a combo; hurried guests pay more. One star opens the next kitchen. With the mouse: click a tile to walk there.",
  "Meilleur score": "Best score",
  "NOUVELLE PARTIE": "NEW GAME",
  "Nt": "Nt",
@@ -126,5 +124,15 @@
  "Étoiles": "Stars",
  "Étoiles :": "Stars:",
  "Étoiles en tout": "Total stars",
- "étoiles": "stars"
+ "étoiles": "stars",
+ "Les clients attendent dans la salle, à droite ; leurs tickets sont en haut. Prends les ingrédients dans les caisses, hache-les sur la planche (maintiens E), cuis le steak à la poêle, les frites à la friteuse, la pizza garnie au four et la soupe à la marmite, dresse l'assiette et pose-la sur le passe. Les jauges disent où en est la cuisson ; « !! » : ça va brûler. Deux cuisines bougent : un tapis roulant coupe la première en deux et porte ce que tu poses de l'autre côté ; sur le bateau, tout tangue et te pousse. Servir vite rapporte un pourboire, servir à la suite un combo ; les clients pressés paient plus. Une étoile ouvre la cuisine suivante. À la souris : clique sur une case pour y aller.": "Guests wait in the dining room, on the right; their tickets are at the top. Take ingredients from the crates, chop them on the board (hold E), cook the patty in the pan, fries in the fryer, the topped pizza in the oven and soup in the pot, plate up and put the plate on the pass. Gauges show how the cooking is going; \"!!\": it is about to burn. Two kitchens move: a conveyor belt splits the first in two and carries what you put on it to the other side; on the boat, everything rocks and pushes you. Serving fast earns a tip, serving in a row a combo; hurried guests pay more. One star opens the next kitchen. With the mouse: click a tile to walk there.",
+ "Tapis roulant": "Conveyor belt",
+ "le tapis porte ce que tu poses de l’autre côté du mur": "the belt carries what you put on it to the other side of the wall",
+ "Le bateau": "The boat",
+ "ça tangue : la houle te pousse d’un bord à l’autre": "it rocks: the swell pushes you from side to side",
+ "Ça tangue ! Tiens-toi": "It rocks! Hold on",
+ "le tapis ne porte pas le pain de l’autre côté": "the belt does not carry the bread across",
+ "le tapis du retour ne marche pas": "the return belt does not work",
+ "le bateau ne pousse pas :": "the boat does not push:",
+ "Jeu de cuisine en pixel art vu de dessus, avec la salle et ses clients à côté : neuf cuisines, des commandes à préparer contre la montre (salades, burgers, soupes, frites, pizzas, coupes de fraises). On hache, on cuit à la poêle, à la friteuse, au four ou à la marmite, on dresse l'assiette et on l'envoie au passe ; des jauges montrent la cuisson et préviennent avant que ça brûle. Portes battantes, coups de feu, clients pressés, pourboires et combos. Trois étoiles par cuisine. Deux cuisines qui bougent : un tapis roulant qui coupe la cuisine en deux, et un bateau qui tangue.": "Top-down pixel-art cooking game, with the dining room and its guests alongside: nine kitchens, orders to prepare against the clock (salads, burgers, soups, fries, pizzas, strawberry cups). Chop, cook in the pan, fryer, oven or pot, plate up and send it to the pass; gauges show the cooking and warn you before it burns. Swinging doors, rush hours, hurried guests, tips and combos. Three stars per kitchen. Two moving kitchens: a conveyor belt splitting the kitchen in two, and a rocking boat."
 }

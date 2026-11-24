@@ -31,7 +31,12 @@ A top-down pixel art cooking game: prepare the orders and send them to the pass 
 
 ## Kitchens
 
-Nine kitchens, more compact than before: **The Counter**, **Burgers**, **Soups**, **Chip Shop**, **Cheese Shop** (swinging doors), **Pizzeria**, **Tea Room**, **Big Service** and **Rush Hour** (swinging doors and two rushes when orders come twice as fast). Swinging doors open and close every six seconds; a way through always stays free next to them. Each kitchen gives up to **three stars**; one star unlocks the next.
+Eleven kitchens, more compact than before: **The Counter**, **Burgers**, **Soups**, **Chip Shop**, **Cheese Shop** (swinging doors), **Pizzeria**, **Tea Room**, **Big Service** and **Rush Hour** (swinging doors and two rushes when orders come twice as fast), then **Conveyor belt** and **The boat**, the moving kitchens. Swinging doors open and close every six seconds; a way through always stays free next to them. Each kitchen gives up to **three stars**; one star unlocks the next.
+
+### Moving kitchens (new in 1.2.0)
+
+- **Conveyor belt** (burgers, cheeseburgers, fries): a wall splits the kitchen in two, crates and boards on the left, pan, fryer, plates and pass on the right. Two **conveyor belts** cross the wall: what you put on them moves on by itself one tile every 0.4 second to the end (top one to the right, bottom one to the left). Walking round through the bottom is still possible, but it is long.
+- **The boat** (tomato salad, onion soup, strawberry cup): a ship's galley, plank hull and portholes on the sea. The boat **rocks**: when it leans hard, the whole kitchen slides, "It rocks!" shows up and the swell pushes you down the deck; you have to correct your course.
 
 ## Stats
 

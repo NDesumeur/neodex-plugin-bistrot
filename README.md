@@ -31,7 +31,12 @@ Un jeu de cuisine en pixel art, vu de dessus : prépare les commandes et envoie-
 
 ## Les cuisines
 
-Neuf cuisines, plus compactes qu'avant : **Le comptoir**, **Burgers**, **Soupes**, **Friterie**, **Fromagerie** (portes battantes), **Pizzeria**, **Salon de thé**, **Grand service** et **Coup de feu** (portes battantes et deux coups de feu où les commandes arrivent deux fois plus vite). Les portes battantes s'ouvrent et se ferment toutes les six secondes ; un passage reste toujours libre à côté. Chaque cuisine donne jusqu'à **trois étoiles** ; une étoile ouvre la suivante.
+Onze cuisines, plus compactes qu'avant : **Le comptoir**, **Burgers**, **Soupes**, **Friterie**, **Fromagerie** (portes battantes), **Pizzeria**, **Salon de thé**, **Grand service** et **Coup de feu** (portes battantes et deux coups de feu où les commandes arrivent deux fois plus vite), puis **Tapis roulant** et **Le bateau**, les cuisines qui bougent. Les portes battantes s'ouvrent et se ferment toutes les six secondes ; un passage reste toujours libre à côté. Chaque cuisine donne jusqu'à **trois étoiles** ; une étoile ouvre la suivante.
+
+### Les cuisines qui bougent (nouveau en 1.2.0)
+
+- **Tapis roulant** (burgers, cheeseburgers, frites) : un mur coupe la cuisine en deux, les caisses et les planches à gauche, la poêle, la friteuse, les assiettes et le passe à droite. Deux **tapis roulants** traversent le mur : ce que tu poses dessus avance tout seul d'une case toutes les 0,4 seconde jusqu'au bout (en haut vers la droite, en bas vers la gauche). Le tour à pied par le bas reste possible, mais il est long.
+- **Le bateau** (salade tomate, soupe à l'oignon, coupe de fraises) : une cuisine de navire, coque en planches et hublots sur la mer. Le bateau **tangue** : quand il penche fort, toute la cuisine glisse, « Ça tangue ! » s'affiche et la houle te pousse vers le bas du pont ; il faut corriger sa route.
 
 ## Statistiques
 

@@ -6,7 +6,7 @@ const HTML = `<div class="appWrap wide">
     <div class="gSide">
       <div class="sysCard"><b>RECORDS</b><div class="gStats" id="bsStats"></div></div>
       <div class="row"><button class="btn main" id="bsNew">NOUVELLE PARTIE</button></div>
-      <div class="hint">Les clients attendent dans la salle, à droite ; leurs tickets sont en haut. Prends les ingrédients dans les caisses, hache-les sur la planche (maintiens E), cuis le steak à la poêle, les frites à la friteuse, la pizza garnie au four et la soupe à la marmite, dresse l'assiette et pose-la sur le passe. Les jauges disent où en est la cuisson ; « !! » : ça va brûler. Servir vite rapporte un pourboire, servir à la suite un combo ; les clients pressés paient plus. Une étoile ouvre la cuisine suivante. À la souris : clique sur une case pour y aller.</div>
+      <div class="hint">Les clients attendent dans la salle, à droite ; leurs tickets sont en haut. Prends les ingrédients dans les caisses, hache-les sur la planche (maintiens E), cuis le steak à la poêle, les frites à la friteuse, la pizza garnie au four et la soupe à la marmite, dresse l'assiette et pose-la sur le passe. Les jauges disent où en est la cuisson ; « !! » : ça va brûler. Deux cuisines bougent : un tapis roulant coupe la première en deux et porte ce que tu poses de l'autre côté ; sur le bateau, tout tangue et te pousse. Servir vite rapporte un pourboire, servir à la suite un combo ; les clients pressés paient plus. Une étoile ouvre la cuisine suivante. À la souris : clique sur une case pour y aller.</div>
     </div></div>
 </div>`;
 const CSS = `.gMain{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap}
@@ -345,7 +345,7 @@ const BS_ALL = Object.values(BS_REC).map(r => r.parts);
 const BS_CRATE = {T: 'tomate', L: 'salade', P: 'pain', V: 'viande', F: 'fromage', O: 'oignon', K: 'patate', E: 'pate', B: 'fraise', Q: 'creme'};
 const BS_CHOP = ['tomate', 'salade', 'fromage', 'oignon', 'viande', 'patate', 'fraise'];
 // les cuisines : . sol, W mur, # plan de travail, lettres = caisses, C planche, S poêle, U friteuse, Z four, M marmite, A assiettes, X passe (toujours à droite, vers la salle),
-// D poubelle, H porte battante (elle s'ouvre et se ferme toute seule ; un passage reste toujours libre à côté)
+// D poubelle, H porte battante (elle s'ouvre et se ferme toute seule ; un passage reste toujours libre à côté), > < v ^ tapis roulant (il porte ce qu'on y pose), > < v ^ tapis roulant (il porte ce qu'on y pose)
 const BS_LEVELS = [
   {name: 'Le comptoir', rec: ['salade', 'saltom'], gap: 1380, map: [
     'WWWWWW##L#T#C#C#####', 'WWWWWW#............#', 'WWWWWW#............#', 'WWWWWWA...####.....#', 'WWWWWW#...####.....X', 'WWWWWW#............X',
@@ -374,7 +374,21 @@ const BS_LEVELS = [
   {name: 'Coup de feu', rec: ['burger', 'cheese', 'pizza', 'frites'], gap: 1080, rush: true, map: [
     '#T#P#V#FK##E#C#C#C##', 'S........#.........#', 'S........#.........#', 'U........H.........#', 'U........#.........X', 'Z..................X',
     'Z........#.........#', '#........H.........#', '#........#.........#', 'A........#.........#', '####D###############']},
+  // le tapis roulant : un mur coupe la cuisine en deux (ingrédients à gauche, feux et passe à droite) ; le tapis porte ce qu'on y pose, le tour par le bas est long
+  {name: 'Tapis roulant', rec: ['burger', 'cheese', 'frites'], gap: 1320, tip: 'le tapis porte ce que tu poses de l’autre côté du mur', map: [
+    '#P#V#F#K#CC##SS#UU##', '#...........#......#', '#...........#......#', '#.........>>>>.....#', '#...........#......X', '#...........#......X',
+    '#...........#......#', '#.........<<<<.....#', '#...........#......#', '#..................A', '####D###########D###']},
+  // le bateau : la cuisine tangue d'un bord à l'autre et pousse le cuisinier
+  {name: 'Le bateau', rec: ['saltom', 'soupeO', 'dessert'], gap: 1260, boat: true, tip: 'ça tangue : la houle te pousse d’un bord à l’autre', map: [
+    'WWWWWW##L#T#O#B#QCC#', 'WWWWWWM............#', 'WWWWWWM............#', 'WWWWWW#...##..##...#', 'WWWWWWA...#....#...X', 'WWWWWW#...#....#...X',
+    'WWWWWW#...##..##...#', 'WWWWWWM............#', 'WWWWWW#............#', 'WWWWWW#............#', 'WWWWWW#####D########']},
 ];
+const BS_BELT = {'>': [1, 0], '<': [-1, 0], v: [0, 1], '^': [0, -1]};
+function bsBelt() {  // chaque objet sur le tapis avance d'une case, si la suivante (tapis ou plan de travail) est libre
+  const moved = new Set();
+  for (let pass = 0, ch = true; ch && pass < 30; pass++) { ch = false;
+    for (const [k, nk] of bs.belts) { const it = bs.items.get(k), c = bsCk(nk); if (!it || moved.has(it) || bs.items.has(nk) || (c !== '#' && !BS_BELT[c])) continue; bs.items.set(nk, it); bs.items.delete(k); moved.add(it); ch = true; } }
+}
 const bsGoals = [];  // les seuils des trois étoiles de chaque cuisine, fixés par le cuisinier automatique (vérification plus bas)
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const bsKey = (cx, cy) => cy * BS.COLS + cx;
@@ -399,7 +413,8 @@ function bsNew(li = bss.level) {
   L.map.forEach((r, y) => [...r].forEach((c, x) => { if (c === 'M') items.set(bsKey(x, y), {t: 'marmite', parts: [], k: 0}); }));
   bs = renew(bs, {g, mode: 'ready', tick: 0, seen: 0, li, L, grid: L.map.map(r => [...r]), items, x: 9 * 12 + 6, y: 5 * 12 + 6, dir: [0, 1], walk: 0, hand: null, keys: new Set(),
     t: 0, count: 0, score: 0, served: 0, failed: 0, orders: [], clients: [], next: 30, rng: seeded(li * 97 + 5), plates: BS.PLATES, back: [], fx: [], msg: null, goal: null, lastK: -1, chop: false,
-    dead: 0, stars: 0, record: false, bot: null, doorOpen: true, combo: 0, bestCombo: 0, lastServe: -1e9, tips: 0, rushT: 0, banner: null});
+    dead: 0, stars: 0, record: false, bot: null, doorOpen: true, combo: 0, bestCombo: 0, lastServe: -1e9, tips: 0, rushT: 0, banner: null, belts: [], tilt: 0, tilting: 0});
+  L.map.forEach((r, y) => [...r].forEach((c, x) => { const d = BS_BELT[c]; if (d) bs.belts.push([bsKey(x, y), bsKey(x + d[0], y + d[1])]); }));
   bsInfo();
 }
 const bsSay = txt => { bs.msg = {txt, t: 100}; };
@@ -525,6 +540,11 @@ function bsUpdate() {
   // le coup de feu : à 1 et 2 minutes, les commandes arrivent deux fois plus vite pendant 20 secondes
   if (L.rush && (bs.t === 60 * 60 || bs.t === 120 * 60)) { bs.rushT = 20 * 60; bs.banner = {txt: 'COUP DE FEU !', t: 120}; bs.next = Math.min(bs.next, 30); bsBeep(440, .3, 'sawtooth', 880, .03); }
   if (bs.rushT > 0) bs.rushT--;
+  if (L.boat) {  // la houle : quand le bateau penche fort, le cuisinier glisse vers le bas du pont
+    const ph = bs.tilt = Math.sin(bs.t / 150);
+    if (Math.abs(ph) > .55) { if (!bs.tilting) { bs.tilting = 1; bsSay('Ça tangue ! Tiens-toi'); bsBeep(160, .5, 'sine', 110, .03); } bsMove(ph * .5, 0); } else bs.tilting = 0;
+  }
+  if (bs.belts.length && bs.t % 24 === 0) bsBelt();
   if (!bs.orders.length) bs.next = Math.min(bs.next, 90);
   if (--bs.next <= 0) { bs.next = bs.rushT > 0 ? L.gap >> 1 : L.gap; if (bs.orders.length < 4) bsOrder(); }
   for (const o of bs.orders) { if (o.born) o.born--; if (--o.left <= 0) {
@@ -648,6 +668,11 @@ function bsGauge(g, x, y, f, col) { px(g, '#1a1008', x - 1, y - 1, 22, 6); px(g,
 function bsWarn(g, x, y) { if (bs.tick % 16 < 9) { px(g, '#1a1008', x - 7, y - 9, 14, 11); px(g, '#ff4a3a', x - 6, y - 8, 12, 9); pxFont(g, '!!', x, y - 1, '#ffffff', 8, 'center'); } }
 const bsHash = (cx, cy) => (cx * 7 + cy * 13 + cx * cy) % 11;
 function bsWall(g, x, y, cx, cy) {  // le mur de briques, garni ici et là d'étagères, de casseroles pendues, d'un cadre ou d'une fenêtre
+  if (bs.L.boat) {  // sur le bateau : la coque en planches, des hublots sur la mer
+    px(g, '#6a4422', x, y, 24, 24); for (let r = 0; r < 4; r++) { px(g, r % 2 ? '#7a5028' : '#71492a', x, y + r * 6, 24, 5); px(g, '#3a2210', x, y + r * 6 + 5, 24, 1); px(g, '#3a2210', x + ((cx * 7 + r * 11) % 20), y + r * 6, 1, 5); }
+    if ((cx * 2 + cy) % 4 === 0) { const w = Math.round(Math.sin((bs.tick + cx * 20) / 25) * 2); px(g, '#1a1008', x + 4, y + 4, 16, 16); px(g, '#c8a040', x + 5, y + 5, 14, 14); px(g, '#2a5a98', x + 7, y + 7, 10, 10); px(g, '#8ac8f8', x + 7, y + 11 + w, 10, 1); px(g, '#4a8ad8', x + 7, y + 12 + w, 10, 5 - w); }
+    px(g, '#2a1408', x, y + 23, 24, 1); return;
+  }
   px(g, '#5a2e1e', x, y, 24, 24);
   for (let r = 0; r < 4; r++) for (let c = -1; c < 3; c++) { const bx = x + c * 12 + (r % 2) * 6, by = y + r * 6; px(g, (c + r + cx) % 3 ? '#8a4a32' : '#7a4028', Math.max(x, bx), by, Math.min(11, x + 24 - Math.max(x, bx)), 5); px(g, '#a05a3a', Math.max(x, bx), by, Math.min(11, x + 24 - Math.max(x, bx)), 1); }
   const h = bsHash(cx, cy);
@@ -674,6 +699,17 @@ function bsTile(g, cx, cy) {
     bsFloorTile(g, x, y, cx, cy);
     if (bs.doorOpen) { px(g, '#7a4a22', x, y + 1, 4, 22); px(g, '#7a4a22', x + 20, y + 1, 4, 22); px(g, '#a8763e', x + 1, y + 2, 2, 20); px(g, '#a8763e', x + 21, y + 2, 2, 20); }
     else { px(g, '#1a1008', x, y, 24, 24); for (const dx of [1, 13]) { px(g, '#a8763e', x + dx, y + 1, 10, 22); px(g, '#c8925a', x + dx, y + 1, 10, 2); px(g, '#1a1008', x + dx + 3, y + 6, 5, 5); px(g, '#8ac8f8', x + dx + 4, y + 7, 3, 3); } }
+    return;
+  }
+  if (BS_BELT[ch]) {  // le tapis roulant : caoutchouc sombre, chevrons qui défilent dans son sens, rouleaux sur la façade
+    const [dx, dy] = BS_BELT[ch], o = (t >> 1) % 8;
+    px(g, '#1a1c24', x, y, 24, 16); px(g, '#3a3c48', x + 1, y + 2, 22, 12);
+    for (let i = 0; i < 3; i++) { const s = (i * 8 + o * (dx + dy > 0 ? 1 : -1) + 24) % 24;
+      if (dx) for (let j = 0; j < 3; j++) px(g, '#7a7e8c', x + s + (dx > 0 ? j : 2 - j), y + 5 + j, 1, 1), px(g, '#7a7e8c', x + s + (dx > 0 ? j : 2 - j), y + 11 - j, 1, 1);
+      else for (let j = 0; j < 3; j++) px(g, '#7a7e8c', x + 7 + j, y + 2 + (s % 12) + (dy > 0 ? j : 2 - j), 1, 1), px(g, '#7a7e8c', x + 15 - j, y + 2 + (s % 12) + (dy > 0 ? j : 2 - j), 1, 1); }
+    px(g, '#4a4e5a', x, y + 16, 24, 7); for (let i = 0; i < 4; i++) { px(g, '#2a2e38', x + 2 + i * 6, y + 18, 4, 4); px(g, '#8a8e9c', x + 3 + i * 6, y + 18, 1, 1); }
+    px(g, '#2a1408', x, y + 23, 24, 1);
+    if (it) bsItem(g, it, x + 12, y + 15);
     return;
   }
   const metal = 'SUZMX'.includes(ch);
@@ -796,11 +832,13 @@ function bsDraw() {
   const g = bs.g, {W, H, TOP} = BS;
   for (; bs.seen < bs.tick; bs.seen++) if (bs.mode === 'over') bs.dead++;
   g.imageSmoothingEnabled = false;
-  const crow = Math.floor(bs.y / 12), front = bs.mode === 'play' ? bsFront() : -1;
+  const crow = Math.floor(bs.y / 12), front = bs.mode === 'play' ? bsFront() : -1, sway = Math.round(bs.tilt * 4);
+  if (bs.L.boat) { px(g, '#1a3a5a', 0, TOP, W, H - TOP); g.save(); g.translate(sway, 0); }  // le bateau penche : toute la cuisine glisse un peu, la mer se voit au bord
   for (let cy = 0; cy < BS.ROWS; cy++) { for (let cx = 0; cx < BS.COLS; cx++) bsTile(g, cx, cy); if (cy === crow) bsChef(g); }
   bsHall(g);
   if (front >= 0) { const fx = front % BS.COLS * 24, fy = TOP + Math.floor(front / BS.COLS) * 24, c = '#ffffff'; for (const [a, b] of [[0, 0], [20, 0], [0, 20], [20, 20]]) { px(g, c, fx + a, fy + b + (b ? 2 : 0), 4, 2); px(g, c, fx + a + (a ? 2 : 0), fy + b, 2, 4); } }
   for (const f of bs.fx) { if (f.hud) continue; if (f.txt) pxFont(g, f.txt, f.x * 2, TOP + f.y * 2 - (70 - f.t) * .5, f.c, 8, 'center'); else px(g, f.c, f.x * 2, TOP + f.y * 2 - (30 - f.t) * .8, 3, 3); }
+  if (bs.L.boat) g.restore();
   // les tickets de commande, le temps et le score
   px(g, '#2a1810', 0, 0, W, TOP); for (let x = 0; x < W; x += 12) px(g, '#33200f', x, 0, 6, TOP - 1); px(g, '#1a1008', 0, TOP - 1, W, 1); px(g, '#8a8e9c', 0, 0, W, 2); px(g, '#4a4e5a', 0, 2, W, 1);
   bs.orders.forEach((o, i) => {
@@ -820,7 +858,7 @@ function bsDraw() {
   if (bs.banner) { const k = bs.banner.t % 20 < 10; px(g, 'rgba(14,10,20,.8)', 0, TOP + 110, 480, 34); pxFont(g, bs.banner.txt, 240, TOP + 134, k ? '#ff6a3a' : '#ffd84a', 16, 'center'); }
   if (bs.msg) { px(g, 'rgba(14,10,20,.85)', 0, H - 22, 480, 22); pxFont(g, bs.msg.txt, 240, H - 7, '#ffffff', 8, 'center'); }
   if (bs.mode === 'ready') { const gl = bsGoals[bs.li];
-    gameText(g, W, [[(bs.li + 1) + '. ' + bs.L.name.toUpperCase(), '#ffd84a', 16], ['', ''], [bs.L.rec.map(r => BS_REC[r].name).join(' · '), '#ffffff'], ['Espace : prendre / poser · E : hacher' + (bs.L.rush ? ' · gare aux coups de feu' : ''), '#b8d0ff'],
+    gameText(g, W, [[(bs.li + 1) + '. ' + bs.L.name.toUpperCase(), '#ffd84a', 16], ['', ''], [bs.L.rec.map(r => BS_REC[r].name).join(' · '), '#ffffff'], ['Espace : prendre / poser · E : hacher' + (bs.L.rush ? ' · gare aux coups de feu' : ''), '#b8d0ff'], ...(bs.L.tip ? [[bs.L.tip, '#ffb04a']] : []),
       [gl ? 'Étoiles : ' + gl.join(' · ') + ' points' : '', '#ffd84a'], ['← → : cuisine · Espace : commencer', '#b8b0c8']], 110); }
   if (bs.mode === 'play' && bs.count < 120) pxFont(g, bs.count < 70 ? 'PRÊTS ?' : 'SERVICE !', 240, 170, bs.count < 70 ? '#ffd84a' : '#7ae05a', 24, 'center');
   if (bs.mode === 'pause') gameText(g, W, [['PAUSE', '#ffd84a', 16], ['Entrée : reprendre', '#b8b0c8']], 150);
@@ -925,7 +963,7 @@ function* bsBotMake(r) {
     bs = null; bsNew(li);
     const reach = new Set(); { const q = [[9, 5]]; reach.add(bsKey(9, 5)); for (let i = 0; i < q.length; i++) for (const [dx, dy] of DIRS) { const nx = q[i][0] + dx, ny = q[i][1] + dy; if (bsFloor(nx, ny) && !reach.has(bsKey(nx, ny))) { reach.add(bsKey(nx, ny)); q.push([nx, ny]); } } }
     if (!bsFloor(9, 5)) bad.push(L.name + ' : départ');
-    L.map.forEach((row, y) => [...row].forEach((c, x) => { if (!'.#WH'.includes(c) && !DIRS.some(([dx, dy]) => reach.has(bsKey(x + dx, y + dy)))) bad.push(L.name + ' : ' + c + ' inaccessible'); if (c === 'X' && x !== 19) bad.push(L.name + ' : passe pas à droite'); }));
+    L.map.forEach((row, y) => [...row].forEach((c, x) => { if (!'.#WH'.includes(c) && !BS_BELT[c] && !DIRS.some(([dx, dy]) => reach.has(bsKey(x + dx, y + dy)))) bad.push(L.name + ' : ' + c + ' inaccessible'); if (c === 'X' && x !== 19) bad.push(L.name + ' : passe pas à droite'); }));
     bs.mode = 'play'; bs.count = 120; bs.bot = bsBotRun();
     while (bs.mode === 'play') bsUpdate();
     if (bs.served < 4) bad.push(L.name + ' : ' + bs.served + ' plats');
@@ -944,6 +982,11 @@ function* bsBotMake(r) {
   if (bs.items.get(bsKey(6, 2))?.s !== 'cuit') bad.push('le steak ne cuit pas');
   for (let i = 0; i < BS_COOKS.S.burn; i++) bsUpdate();
   if (bs.items.get(bsKey(6, 2))?.s !== 'brule') bad.push('le steak ne brûle pas');
+  { const li = BS_LEVELS.findIndex(L => L.name === 'Tapis roulant'); bs = null; bsNew(li); bs.mode = 'play'; bs.count = 120; bs.next = 1e9; bs.items.set(bsKey(10, 3), {t: 'pain', s: 'cru', c: 0, k: 0, parts: []});
+    for (let i = 0; i < 24 * 4; i++) bsUpdate(); if (bs.items.get(bsKey(13, 3))?.t !== 'pain') bad.push('le tapis ne porte pas le pain de l’autre côté');
+    bs.items.set(bsKey(12, 7), {t: 'tomate', s: 'cru', c: 0, k: 0, parts: []}); for (let i = 0; i < 24 * 3; i++) bsUpdate(); if (bs.items.get(bsKey(10, 7))?.t !== 'tomate') bad.push('le tapis du retour ne marche pas');
+    bs = null; bsNew(li + 1); bs.mode = 'play'; bs.count = 120; bs.next = 1e9; bs.x = 8 * 12 + 6; const x0 = bs.x; bs.t = Math.round(150 * Math.PI / 2) - 1; for (let i = 0; i < 20; i++) bsUpdate();
+    if (!(bs.x > x0 + 4) || !bs.tilting) bad.push('le bateau ne pousse pas : ' + x0 + ' → ' + bs.x); }
   console.assert(!bad.length, 'bistrot', bad); view.dataset.selfcheck = bad.length ? bad.join(' ; ') : 'ok';
   Object.assign(bss, JSON.parse(keepS)); for (const k of Object.keys(bss)) if (!(k in JSON.parse(keepS))) delete bss[k];
   bs = keep; bsMute = false;

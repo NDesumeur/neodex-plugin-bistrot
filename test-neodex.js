@@ -1,4 +1,4 @@
-// lancé par le test « local » de NeoDex : vérification interne (neuf cuisines servies par le cuisinier automatique, règles des postes),
+// lancé par le test « local » de NeoDex : vérification interne (onze cuisines servies par le cuisinier automatique, règles des postes),
 // à la souris une tomate prise, posée, hachée et reprise ; des cuisines en plein service, un service complet à la friterie, la mise en page
 module.exports = async ({ pj, sleep }) => {
   const B = `document.getElementById('bsCanvas').__bs`;
@@ -12,8 +12,8 @@ module.exports = async ({ pj, sleep }) => {
   let l = await label(); if (!/en main : tomate\b/.test(l)) throw new Error('le cuisinier devait prendre une tomate : « ' + l + ' »');
   await click(12, 0); await sleep(1200); await click(12, 0); await sleep(800); await shot('2-hacher'); await sleep(1400); await click(12, 0); await sleep(800);
   l = await label(); if (!/en main : tomate hache/.test(l) || /reste 3:00/.test(l)) throw new Error('la tomate devait être hachée et le temps tourner : « ' + l + ' »');
-  for (const [li, name] of [[1, 'burgers'], [3, 'friterie'], [4, 'fromagerie'], [5, 'pizzeria'], [6, 'salon'], [7, 'grand'], [8, 'coupdefeu']]) {
-    await pj(`(${B}.level(${li}), ${B}.start(), ${B}.st().count = 120, ${B}.bot(true), ${B}.ff(${li === 8 ? 3700 : 2400}), 0)`); await sleep(250); await shot('3-' + name);
+  for (const [li, name] of [[1, 'burgers'], [3, 'friterie'], [4, 'fromagerie'], [5, 'pizzeria'], [6, 'salon'], [7, 'grand'], [8, 'coupdefeu'], [9, 'tapis'], [10, 'bateau']]) {
+    await pj(`(${B}.level(${li}), ${B}.start(), ${B}.st().count = 120, ${B}.bot(true), ${B}.ff(${li === 8 ? 3700 : li === 10 ? 2600 : 2400}), 0)`); await sleep(250); await shot('3-' + name);
   }
   await pj(`(${B}.level(3), ${B}.start(), ${B}.st().count = 120, ${B}.bot(true), ${B}.ff(11000), 0)`); await sleep(1500); await shot('4-fin');
   const end = await pj(`(() => { const b = ${B}.st(); return {mode: b.mode, served: b.served, score: b.score, tips: b.tips, combo: b.bestCombo, stars: b.stars}; })()`);
