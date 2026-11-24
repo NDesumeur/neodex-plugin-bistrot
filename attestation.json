@@ -1,9 +1,9 @@
 {
   "pluginId": "neodex.bistrot",
   "repo": "NDesumeur/neodex-plugin-bistrot",
-  "version": "1.1.2",
-  "sha256": "fe21fcfb5c101f03de686d06dd600c94185af4be055279633039575bcf78847c",
-  "approvedAt": "2026-11-19T23:26:43.332Z",
+  "version": "1.2.0",
+  "sha256": "f270ef2c84b8d6654ff35b173186092e4a6a27323c0b66f822cf73c31279bbbd",
+  "approvedAt": "2026-11-24T15:56:14.099Z",
   "neobase": ">=4.0.0",
-  "signature": "PXA8ydBsmLZ/YMPCPNgmoxBJcz4jDZBlmdrNBgyrPXOImlEhequZRstc3LB3zlOoadCo//ltujxbi/Mmbe4JAg=="
+  "signature": "eBCioKjoieLFDcdmc8Bo6eWzO7prTxFp6wqzUj3D/wZrWdLV17CEWTz22fcU7s+irHobSPpqj5eImuewiRZhAQ=="
 }
