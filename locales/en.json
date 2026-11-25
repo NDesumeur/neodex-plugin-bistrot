@@ -134,5 +134,19 @@
  "le tapis ne porte pas le pain de l’autre côté": "the belt does not carry the bread across",
  "le tapis du retour ne marche pas": "the return belt does not work",
  "le bateau ne pousse pas :": "the boat does not push:",
- "Jeu de cuisine en pixel art vu de dessus, avec la salle et ses clients à côté : neuf cuisines, des commandes à préparer contre la montre (salades, burgers, soupes, frites, pizzas, coupes de fraises). On hache, on cuit à la poêle, à la friteuse, au four ou à la marmite, on dresse l'assiette et on l'envoie au passe ; des jauges montrent la cuisson et préviennent avant que ça brûle. Portes battantes, coups de feu, clients pressés, pourboires et combos. Trois étoiles par cuisine. Deux cuisines qui bougent : un tapis roulant qui coupe la cuisine en deux, et un bateau qui tangue.": "Top-down pixel-art cooking game, with the dining room and its guests alongside: nine kitchens, orders to prepare against the clock (salads, burgers, soups, fries, pizzas, strawberry cups). Chop, cook in the pan, fryer, oven or pot, plate up and send it to the pass; gauges show the cooking and warn you before it burns. Swinging doors, rush hours, hurried guests, tips and combos. Three stars per kitchen. Two moving kitchens: a conveyor belt splitting the kitchen in two, and a rocking boat."
+ "Jeu de cuisine en pixel art vu de dessus, avec la salle et ses clients à côté : neuf cuisines, des commandes à préparer contre la montre (salades, burgers, soupes, frites, pizzas, coupes de fraises). On hache, on cuit à la poêle, à la friteuse, au four ou à la marmite, on dresse l'assiette et on l'envoie au passe ; des jauges montrent la cuisson et préviennent avant que ça brûle. Portes battantes, coups de feu, clients pressés, pourboires et combos. Trois étoiles par cuisine. Deux cuisines qui bougent : un tapis roulant qui coupe la cuisine en deux, et un bateau qui tangue.": "Top-down pixel-art cooking game, with the dining room and its guests alongside: nine kitchens, orders to prepare against the clock (salads, burgers, soups, fries, pizzas, strawberry cups). Chop, cook in the pan, fryer, oven or pot, plate up and send it to the pass; gauges show the cooking and warn you before it burns. Swinging doors, rush hours, hurried guests, tips and combos. Three stars per kitchen. Two moving kitchens: a conveyor belt splitting the kitchen in two, and a rocking boat.",
+ "Premier service": "First service",
+ "Finir un premier service": "Finish your first service",
+ "Bonne adresse": "Good spot",
+ "Servir 100 plats en tout": "Serve 100 dishes in total",
+ "Grand restaurant": "Fine restaurant",
+ "Servir 1 000 plats en tout": "Serve 1,000 dishes in total",
+ "Trois étoiles": "Three stars",
+ "Obtenir 3 étoiles dans une cuisine": "Get 3 stars in one kitchen",
+ "Tour de France": "Grand tour",
+ "Obtenir au moins une étoile dans toutes les cuisines": "Get at least one star in every kitchen",
+ "Grand chef": "Head chef",
+ "Obtenir 3 étoiles dans toutes les cuisines": "Get 3 stars in every kitchen",
+ "Généreux clients": "Generous customers",
+ "Recevoir 1 000 de pourboires en tout": "Receive 1,000 in tips in total"
 }

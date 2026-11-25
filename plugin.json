@@ -1,7 +1,7 @@
 {
   "id": "neodex.bistrot",
   "name": "Bistrot",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "NDesumeur",
   "description": "Jeu de cuisine en pixel art vu de dessus, avec la salle et ses clients à côté : neuf cuisines, des commandes à préparer contre la montre (salades, burgers, soupes, frites, pizzas, coupes de fraises). On hache, on cuit à la poêle, à la friteuse, au four ou à la marmite, on dresse l'assiette et on l'envoie au passe ; des jauges montrent la cuisson et préviennent avant que ça brûle. Portes battantes, coups de feu, clients pressés, pourboires et combos. Trois étoiles par cuisine. Deux cuisines qui bougent : un tapis roulant qui coupe la cuisine en deux, et un bateau qui tangue.",
   "icon": "icon.png",
@@ -22,5 +22,57 @@
   "sdk": "2.1.0",
   "permissions": [
     "storage"
+  ],
+  "succes": [
+    {
+      "id": "premier",
+      "nom": "Premier service",
+      "texte": "Finir un premier service"
+    },
+    {
+      "id": "cent",
+      "nom": "Bonne adresse",
+      "texte": "Servir 100 plats en tout"
+    },
+    {
+      "id": "mille",
+      "nom": "Grand restaurant",
+      "texte": "Servir 1 000 plats en tout"
+    },
+    {
+      "id": "etoiles3",
+      "nom": "Trois étoiles",
+      "texte": "Obtenir 3 étoiles dans une cuisine"
+    },
+    {
+      "id": "cuisines",
+      "nom": "Tour de France",
+      "texte": "Obtenir au moins une étoile dans toutes les cuisines"
+    },
+    {
+      "id": "chef",
+      "nom": "Grand chef",
+      "texte": "Obtenir 3 étoiles dans toutes les cuisines",
+      "cache": true
+    },
+    {
+      "id": "pourboires",
+      "nom": "Généreux clients",
+      "texte": "Recevoir 1 000 de pourboires en tout"
+    }
+  ],
+  "records": [
+    {
+      "id": "servis",
+      "nom": "Plats servis",
+      "sens": "haut",
+      "format": "nombre"
+    },
+    {
+      "id": "etoiles",
+      "nom": "Étoiles",
+      "sens": "haut",
+      "format": "nombre"
+    }
   ]
 }

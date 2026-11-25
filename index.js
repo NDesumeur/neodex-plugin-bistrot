@@ -297,6 +297,9 @@ export default async function (ctx) {
   const best = (k, v) => { const b = games.best[k]; if (v > (b ?? 0)) {  // un score nul n'est jamais un record
     games.best[k] = v; saveGames(); return true; } return false; };
   const gstore = (k, init) => (games[k] ??= init);
+  // les trophées de NeoDex (3.4.8 et plus) : succès et records déclarés dans plugin.json ; sur un NeoDex plus ancien, rien ne se passe
+  const trophy = id => { ctx.games?.unlock(id).catch(() => {}); };
+  const trophyRecord = (id, v) => { if (v != null && Number.isFinite(+v)) ctx.games?.record(id, +v).catch(() => {}); };
 function gameLoop(st, appKey, update, draw) {
   cancelAnimationFrame(st.raf);
   const STEP = 1000 / 60; let acc = 0, last = performance.now();
@@ -871,6 +874,7 @@ function bsDraw() {
     ', en main : ' + (bs.hand ? (bs.hand.t === 'assiette' ? 'assiette' + (bs.hand.parts.length ? ' (' + bs.hand.parts.join(', ') + ')' : ' vide') : bs.hand.t + (bs.hand.s && bs.hand.s !== 'cru' ? ' ' + bs.hand.s : '')) : 'rien') + (bs.mode === 'over' ? ', fini, ' + bs.stars + ' étoiles' : '') + '.');
 }
 function bsInfo() {
+  setTimeout(bsTrophies);
   const li = bs ? bs.li : bss.level, gl = bsGoals[li];
   $('bsStats').replaceChildren(...[['Cuisine', (li + 1) + '. ' + BS_LEVELS[li].name], ['Meilleur score', bss.best[li] ?? '--'], ['Étoiles', (bss.stars[li] || 0) + ' / 3'], ['Pour 3 étoiles', gl ? gl[2] : '--'],
     ['Plats servis', bss.served], ['Pourboires', bss.tips], ['Étoiles en tout', Object.values(bss.stars).reduce((a, b) => a + b, 0) + ' / ' + BS_LEVELS.length * 3]].flatMap(([a, c]) => [el('span', '', a), el('b', '', String(c))]));
@@ -990,6 +994,13 @@ function* bsBotMake(r) {
   console.assert(!bad.length, 'bistrot', bad); view.dataset.selfcheck = bad.length ? bad.join(' ; ') : 'ok';
   Object.assign(bss, JSON.parse(keepS)); for (const k of Object.keys(bss)) if (!(k in JSON.parse(keepS))) delete bss[k];
   bs = keep; bsMute = false;
+}
+// les trophées, tirés des statistiques et des records gardés (aussi à l'ouverture : ce qui a été fait avant compte)
+function bsTrophies() {
+  const s = BS_LEVELS.map((_, i) => bss.stars[i] || 0), n = s.reduce((a, x) => a + x, 0), sig = [bss.games, bss.served, bss.tips, n].join(); if (sig === bsTrophies.sig) return; bsTrophies.sig = sig;
+  trophyRecord('servis', bss.served || null); trophyRecord('etoiles', n || null);
+  if (bss.games >= 1) trophy('premier'); if (bss.served >= 100) trophy('cent'); if (bss.served >= 1000) trophy('mille');
+  if (s.some(x => x >= 3)) trophy('etoiles3'); if (s.every(x => x >= 1)) trophy('cuisines'); if (s.every(x => x >= 3)) trophy('chef'); if (bss.tips >= 1000) trophy('pourboires');
 }
 ctx.onOpen(() => {
   if (!bs || !bs.g) { bsNew(bsUnlocked(bss.level) ? bss.level : 0); bs.g = $('bsCanvas').getContext('2d'); }
